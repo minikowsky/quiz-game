@@ -36,91 +36,38 @@ public class MainRootPanel extends JPanel {
 
         //play
         playButton = getMenuButton("Play",100);
-        /*playButton = new JButton("Play");
-        playButton.setFocusable(false);
-        playButton.setSize(btnWidth,btnHeight);
-        playButton.setBounds(25,100, btnWidth, btnHeight);*/
-        playButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout)(cardPanel.getLayout());
-                cl.show(cardPanel,"quiz");
-            }
+        playButton.addActionListener(e -> {
+            CardLayout cl = (CardLayout)(cardPanel.getLayout());
+            cl.show(cardPanel,"quiz");
         });
         menuPanel.add(playButton);
-
         //ranking
-        /*rankingButton = new JButton("Ranking");
-        rankingButton.setFocusable(false);
-        rankingButton.setSize(btnWidth,btnHeight);
-        rankingButton.setBounds(25,135, btnWidth, btnHeight);*/
         rankingButton = getMenuButton("Ranking",135);
-        rankingButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout)(cardPanel.getLayout());
-                cl.show(cardPanel,"ranking");
-            }
+        rankingButton.addActionListener(e -> {
+            CardLayout cl = (CardLayout)(cardPanel.getLayout());
+            cl.show(cardPanel,"ranking");
         });
         menuPanel.add(rankingButton);
-
         //Tutorial
-        /*tutorialButton = new JButton("Tutorial");
-        tutorialButton.setFocusable(false);
-        tutorialButton.setSize(btnWidth,btnHeight);
-        tutorialButton.setBounds(25,170, btnWidth, btnHeight);*/
         tutorialButton = getMenuButton("Tutorial",170);
-        tutorialButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout)(cardPanel.getLayout());
-                cl.show(cardPanel,"tutorial");
-            }
+        tutorialButton.addActionListener(e -> {
+            CardLayout cl = (CardLayout)(cardPanel.getLayout());
+            cl.show(cardPanel,"tutorial");
         });
-        //mouseEvent
-        /*tutorialButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                tutorialButton.setBackground(Color.RED);
-                tutorialButton.setC);
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                tutorialButton.setBackground(UIManager.getColor("control"));
-            }
-        });*/
         menuPanel.add(tutorialButton);
-
         //Settings
-        /*settingsButton = new JButton("Settings");
-        settingsButton.setFocusable(false);
-        settingsButton.setSize(btnWidth,btnHeight);
-        settingsButton.setBounds(25,205, btnWidth, btnHeight);*/
         settingsButton = getMenuButton("Settings",205);
-        settingsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CardLayout cl = (CardLayout)(cardPanel.getLayout());
-                cl.show(cardPanel,"settings");
-            }
+        settingsButton.addActionListener(e -> {
+            CardLayout cl = (CardLayout)(cardPanel.getLayout());
+            cl.show(cardPanel,"settings");
         });
         menuPanel.add(settingsButton);
-
-        //exit
+        //logout
         logoutButton = getMenuButton("Logout",240);
-        /*logoutButton = new JButton("Logout");
-        logoutButton.setFocusable(false);
-        logoutButton.setSize(btnWidth,btnHeight);
-        logoutButton.setBounds(25,240, btnWidth, btnHeight);*/
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                CurrentUser.setUser(0,null,null);
-                ((Window)getRootPane().getParent()).dispose();
-                new EntryFrame();
-            }
+        logoutButton.addActionListener(e -> {
+            CurrentUser.setUser(0,null,null);
+            ((Window)getRootPane().getParent()).dispose();
+            new EntryFrame();
         });
         menuPanel.add(logoutButton);
 

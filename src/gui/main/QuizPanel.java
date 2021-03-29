@@ -1,5 +1,7 @@
 package gui.main;
 
+import database.Driver;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,30 +27,21 @@ public class QuizPanel extends JPanel implements ActionListener{
     Dimension buttonDimension = new Dimension(200,50);
     JProgressBar timeBar;
     Timer timer;
-    List<Integer> order = new ArrayList<Integer>();
-    ArrayList<String> questions = new ArrayList<String>(3);
-    ArrayList<String> aAnswer = new ArrayList<String>(3);
-    ArrayList<String> bAnswer = new ArrayList<String>(3);
-    ArrayList<String> cAnswer = new ArrayList<String>(3);
-    ArrayList<String> dAnswer = new ArrayList<String>(3);
-    ArrayList<String> correct = new ArrayList<String>(3);
+    List<Integer>order = new ArrayList<>();
+    ArrayList<ArrayList<String>> questions;
     JLabel introLabel;
     JButton startButton;
     JLabel resultLabel;
     JButton againButton;
     public QuizPanel(){
-
         this.setPreferredSize(SCREEN_SIZE);
         this.setBackground(new Color(128, 128, 128));
         this.setLayout(null);
-        timer = new Timer(DELAY, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timeLeft-=DELAY;
-                timeBar.setValue(timeLeft);
-                if(timeLeft<=0){
-                    displayAnswer("");
-                }
+        timer = new Timer(DELAY, e -> {
+            timeLeft-=DELAY;
+            timeBar.setValue(timeLeft);
+            if(timeLeft<=0){
+                displayAnswer("");
             }
         });
 
@@ -65,15 +58,12 @@ public class QuizPanel extends JPanel implements ActionListener{
         startButton.setSize(100,50);
         startButton.setBounds((SCREEN_SIZE.width-startButton.getWidth())/2,3*SCREEN_SIZE.height/4,
                 startButton.getWidth(),startButton.getHeight());
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resultLabel = null;
-                introLabel.setVisible(false);
-                startButton.setVisible(false);
-                initComponents();
-                startQuiz();
-            }
+        startButton.addActionListener(e -> {
+            resultLabel = null;
+            introLabel.setVisible(false);
+            startButton.setVisible(false);
+            initComponents();
+            startQuiz();
         });
         this.add(startButton);
     }
@@ -127,27 +117,9 @@ public class QuizPanel extends JPanel implements ActionListener{
         nextQuestion();
     }
     private void getRandomQuestions(){
-        questions.add("Jaki jest najważnieszy jezyk w programowaniu?");
-        aAnswer.add("A: Python");
-        bAnswer.add("B: Java");
-        cAnswer.add("C: C++");
-        dAnswer.add("D: Angielski");
-        correct.add("D: Angielski");
+        questions = Driver.getQuestions("Easy");
 
-        questions.add("Który z poniższych jezyków jest najstarszy?");
-        aAnswer.add("A: PHP");
-        bAnswer.add("B: HTML");
-        cAnswer.add("C: Python");
-        dAnswer.add("D: Java");
-        correct.add("C: Python");
-
-        questions.add("Co to jest IDE?");
-        aAnswer.add("A: Jest to zintegrowane środowisko programistyczne");
-        bAnswer.add("B: Jest to interfejs programowania aplikacji");
-        cAnswer.add("C: Jest to darmowe oprogramowanie udpostępniające środowisko niezbędne do programowania w Javie");
-        dAnswer.add("D: Jest to rozproszony system kontroli wersji");
-        correct.add("A: Jest to zintegrowane środowisko programistyczne");
-        for(int i=0;i<numberOfQuestions;i++){
+        for(int i = 0; i < questions.size(); i++){
             order.add(i);
         }
         Collections.shuffle(order);
@@ -161,48 +133,48 @@ public class QuizPanel extends JPanel implements ActionListener{
             numberLabel.setText("#"+(currentQuestion+1));
             FontMetrics metrics = getFontMetrics(numberLabel.getFont());
             numberLabel.setBounds(25,25,metrics.stringWidth(numberLabel.getText()), metrics.getHeight());
-            questionLabel.setText(questions.get(order.get(currentQuestion)));
+            questionLabel.setText(questions.get(order.get(currentQuestion)).get(1));
             metrics = getFontMetrics(numberLabel.getFont());
             questionLabel.setBounds(50,150,metrics.stringWidth(questionLabel.getText()), metrics.getHeight());
-            System.out.println(questionLabel.getText());
-            aButton.setText(aAnswer.get(order.get(currentQuestion)));
-            bButton.setText(bAnswer.get(order.get(currentQuestion)));
-            cButton.setText(cAnswer.get(order.get(currentQuestion)));
-            dButton.setText(dAnswer.get(order.get(currentQuestion)));
+            //System.out.println(questionLabel.getText());
+            aButton.setText(questions.get(order.get(currentQuestion)).get(2));
+            bButton.setText(questions.get(order.get(currentQuestion)).get(3));
+            cButton.setText(questions.get(order.get(currentQuestion)).get(4));
+            dButton.setText(questions.get(order.get(currentQuestion)).get(5));
             timer.start();
         }
     }
     boolean checkAnswer(String correctAnswer){
-        return correctAnswer.equals(correct.get(order.get(currentQuestion)));
+        return correctAnswer.equals(questions.get(order.get(currentQuestion)).get(6));
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         String answer = "";
         if (aButton.equals(source)) {
-            answer = aButton.getText();
+            answer = "a";
             if(checkAnswer(answer)) {
-                points++;
+                points+=Integer.parseInt(questions.get(order.get(currentQuestion)).get(7));
             }
         } else if (bButton.equals(source)) {
-            answer = bButton.getText();
+            answer = "b";
             if(checkAnswer(answer)) {
-                points++;
+                points+=Integer.parseInt(questions.get(order.get(currentQuestion)).get(7));
             }
 
         } else if (cButton.equals(source)) {
-            answer = cButton.getText();
+            answer = "c";
             if(checkAnswer(answer)){
-                points++;
+                points+=Integer.parseInt(questions.get(order.get(currentQuestion)).get(7));
             }
 
         } else if (dButton.equals(source)) {
-            answer = dButton.getText();
+            answer = "d";
             if(checkAnswer(dButton.getText())){
-                points++;
+                points+=Integer.parseInt(questions.get(order.get(currentQuestion)).get(7));
             }
         }
-        System.out.println(points);
+        //System.out.println(points);
         displayAnswer(answer);
     }
     void displayAnswer(String answer){
@@ -217,40 +189,37 @@ public class QuizPanel extends JPanel implements ActionListener{
             cButton.setBackground(Color.RED);
             dButton.setBackground(Color.RED);
         } else {
-            String correctAnswer = correct.get(order.get(currentQuestion));
-            System.out.println(correctAnswer);
-            if(correctAnswer.equals(aButton.getText()))
+            String correctAnswer =questions.get(order.get(currentQuestion)).get(6);
+            //System.out.println(correctAnswer);
+            if(correctAnswer.equals("a"))
                 aButton.setBackground(Color.GREEN);
-            else if(correctAnswer.equals(bButton.getText()))
+            else if(correctAnswer.equals("b"))
                 bButton.setBackground(Color.GREEN);
-            else if(correctAnswer.equals(cButton.getText()))
+            else if(correctAnswer.equals("c"))
                 cButton.setBackground(Color.GREEN);
             else
                 dButton.setBackground(Color.GREEN);
             if(!answer.equals(correctAnswer)){
-                if(answer.equals(aButton.getText()))
+                if(answer.equals("a"))
                     aButton.setBackground(Color.RED);
-                else if(answer.equals(bButton.getText()))
+                else if(answer.equals("b"))
                     bButton.setBackground(Color.RED);
-                else if(answer.equals(cButton.getText()))
+                else if(answer.equals("c"))
                     cButton.setBackground(Color.RED);
                 else
                     dButton.setBackground(Color.RED);
             }
         }
-        Timer pause = new Timer(1500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                aButton.setBackground(Color.GRAY);
-                bButton.setBackground(Color.GRAY);
-                cButton.setBackground(Color.GRAY);
-                dButton.setBackground(Color.GRAY);
-                aButton.setEnabled(true);
-                bButton.setEnabled(true);
-                cButton.setEnabled(true);
-                dButton.setEnabled(true);
-                nextQuestion();
-            }
+        Timer pause = new Timer(1500, e -> {
+            aButton.setBackground(Color.GRAY);
+            bButton.setBackground(Color.GRAY);
+            cButton.setBackground(Color.GRAY);
+            dButton.setBackground(Color.GRAY);
+            aButton.setEnabled(true);
+            bButton.setEnabled(true);
+            cButton.setEnabled(true);
+            dButton.setEnabled(true);
+            nextQuestion();
         });
         pause.setRepeats(false);
         pause.start();
@@ -276,20 +245,19 @@ public class QuizPanel extends JPanel implements ActionListener{
         againButton.setSize(100,50);
         againButton.setBounds((SCREEN_SIZE.width-againButton.getWidth())/2,3*SCREEN_SIZE.height/4,
                 againButton.getWidth(),againButton.getHeight());
-        againButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resultLabel.setVisible(false);
-                againButton.setVisible(false);
-                numberLabel.setVisible(true);
-                questionLabel.setVisible(true);
-                aButton.setVisible(true);
-                bButton.setVisible(true);
-                cButton.setVisible(true);
-                dButton.setVisible(true);
-                timeBar.setVisible(true);
-                startQuiz();
-            }
+        againButton.addActionListener(e -> {
+            resultLabel.setVisible(false);
+            againButton.setVisible(false);
+            numberLabel.setVisible(true);
+            questionLabel.setVisible(true);
+            aButton.setVisible(true);
+            bButton.setVisible(true);
+            cButton.setVisible(true);
+            dButton.setVisible(true);
+            timeBar.setVisible(true);
+            questions.clear();
+            order.clear();
+            startQuiz();
         });
         this.add(againButton);
     }

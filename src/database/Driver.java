@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.util.*;
 
 public class Driver {
     static Connection connection = null;
@@ -41,6 +42,7 @@ public class Driver {
         }
         return result;
     }
+
     public static boolean register(String userLogin, String userPassword){
         int result = 0;
         try {
@@ -78,6 +80,7 @@ public class Driver {
         }
         return result;
     }
+
     public static int getID(String userLogin, String userPassword){
         int id = 0;
         try {
@@ -94,6 +97,7 @@ public class Driver {
         }
         return id;
     }
+
     public static void updateUser(int userID, String userPassword){
         try {
             String sql = "UPDATE users SET userPassword=? WHERE userID=? ;";
@@ -105,5 +109,32 @@ public class Driver {
             exception.printStackTrace();
             System.out.println("Error");
         }
+    }
+
+    public static ArrayList<ArrayList<String>> getQuestions(String gameDifficulty){
+        ArrayList<ArrayList<String>> questions = new ArrayList<ArrayList<String>>();
+        try{
+            String sql = "SELECT * FROM questions_eng WHERE difficulty=?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,gameDifficulty);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ArrayList<String> questionSet = new ArrayList<String>();
+                for(int i = 1; i <= 8; i++){
+                    questionSet.add(resultSet.getString(i));
+                }
+                questions.add(questionSet);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        for(ArrayList<String> s: questions){
+            String r="";
+            for(int i=0;i< s.size();i++){
+                r+=s.get(i) + " ";
+            }
+            System.out.println(r);
+        }
+        return questions;
     }
 }
