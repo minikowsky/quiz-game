@@ -67,38 +67,35 @@ public class SignUpPanel extends JPanel {
         signUpButton.setFocusable(false);
         signUpButton.setSize(75,20);
         signUpButton.setBounds(375,335, signUpButton.getWidth(), signUpButton.getHeight());
-        signUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String pass1 = String.valueOf(passwordField.getPassword());
-                String pass2 = String.valueOf(passwordAgainField.getPassword());
-                String login = loginField.getText();
-                if(Driver.isLoginTaken(login)){
-                    JOptionPane.showMessageDialog(null,"This login is already taken!");
-                }
-                else if(!login.equals("")){
-                    if(pass1.equals("")||pass2.equals("")){
-                        JOptionPane.showMessageDialog(null,"The password field is required");
-                    }
-                    else{
-                        if(pass1.equals(pass2)){
-                            if(Driver.register(login,pass1)){
-                                JOptionPane.showMessageDialog(null,"You have been signed in!\n\tNow log in");
-                            } else{
-                                JOptionPane.showMessageDialog(null,"Login is already taken :( ");
-                            }
-                        } else{
-                            JOptionPane.showMessageDialog(null,"These two passwords are different");
-                        }
-                    }
+        signUpButton.addActionListener(e -> {
+            String pass1 = String.valueOf(passwordField.getPassword());
+            String pass2 = String.valueOf(passwordAgainField.getPassword());
+            String login = loginField.getText();
+            if(Driver.isLoginTaken(login)){
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"This login is already taken!");
+            }
+            else if(!login.equals("")){
+                if(pass1.equals("")||pass2.equals("")){
+                    JOptionPane.showMessageDialog(getRootPane().getParent(),"The password field is required");
                 }
                 else{
-                    JOptionPane.showMessageDialog(null,"The login field is required");
+                    if(pass1.equals(pass2)){
+                        if(Driver.register(login,pass1)){
+                            JOptionPane.showMessageDialog(getRootPane().getParent(),"You have been signed in!\n\tNow log in");
+                        } else{
+                            JOptionPane.showMessageDialog(getRootPane().getParent(),"Login is already taken :( ");
+                        }
+                    } else{
+                        JOptionPane.showMessageDialog(getRootPane().getParent(),"These two passwords are different");
+                    }
                 }
-                loginField.setText("");
-                passwordField.setText("");
-                passwordAgainField.setText("");
             }
+            else{
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"The login field is required");
+            }
+            loginField.setText("");
+            passwordField.setText("");
+            passwordAgainField.setText("");
         });
         this.add(signUpButton);
 

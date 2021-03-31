@@ -46,9 +46,20 @@ public class QuizPanel extends JPanel implements ActionListener{
                 displayAnswer("");
             }
         });
+        initComponents();
         introView();
     }
     private void introView(){
+        //Result view components
+        resultLabel.setVisible(false);
+        againButton.setVisible(false);
+        //Intro components
+        introLabel.setVisible(true);
+        difficultyComboBox.setVisible(true);
+        startButton.setVisible(true);
+
+    }
+    private void initComponents() {
         introLabel = new JLabel("Press 'Start' to begin!");
         Font font = new Font("Ink Free",Font.BOLD, 35);
         introLabel.setFont(font);
@@ -60,8 +71,8 @@ public class QuizPanel extends JPanel implements ActionListener{
         String[] difficulties = {"Easy","Medium","Hard"};
         difficultyComboBox = new JComboBox(difficulties);
         difficultyComboBox.setSelectedIndex(0);
-        gameDifficulty = gameDifficulty = (String)difficultyComboBox.getSelectedItem();
-        difficultyComboBox.addActionListener(e -> {gameDifficulty = (String)difficultyComboBox.getSelectedItem();});
+        gameDifficulty =  (String)difficultyComboBox.getSelectedItem();
+        difficultyComboBox.addActionListener(e -> gameDifficulty = (String)difficultyComboBox.getSelectedItem());
         difficultyComboBox.setSize(75,25);
         difficultyComboBox.setBounds((SCREEN_SIZE.width-difficultyComboBox.getWidth())/2,3*SCREEN_SIZE.height/5,
                 difficultyComboBox.getWidth(),difficultyComboBox.getHeight());
@@ -71,21 +82,12 @@ public class QuizPanel extends JPanel implements ActionListener{
         startButton.setSize(100,50);
         startButton.setBounds((SCREEN_SIZE.width-startButton.getWidth())/2,3*SCREEN_SIZE.height/4,
                 startButton.getWidth(),startButton.getHeight());
-        startButton.addActionListener(e -> {
-            resultLabel = null;
-            introLabel.setVisible(false);
-            difficultyComboBox.setVisible(false);
-            startButton.setVisible(false);
-            initComponents();
-            startQuiz();
-        });
+        startButton.addActionListener(e -> startQuiz());
         this.add(startButton);
-    }
-    private void initComponents() {
         //number
-        Font font = new Font("Ink Free",Font.BOLD, 35);
         numberLabel = new JLabel();
         numberLabel.setFont(font);
+        numberLabel.setVisible(false);
         numberLabel.setForeground(Color.WHITE);
         this.add(numberLabel);
         //question
@@ -93,38 +95,56 @@ public class QuizPanel extends JPanel implements ActionListener{
         questionLabel = new JLabel();
         questionLabel.setFont(font);
         questionLabel.setForeground(Color.WHITE);
+        questionLabel.setVisible(false);
         this.add(questionLabel);
         //buttons
         aButton = getQuizButton(25,275);
-        aButton.addActionListener(this);
         bButton = getQuizButton(275,275);
-        bButton.addActionListener(this);
         cButton = getQuizButton(25,375);
-        cButton.addActionListener(this);
         dButton = getQuizButton(275,375);
-        dButton.addActionListener(this);
-        this.add(aButton);
-        this.add(bButton);
-        this.add(cButton);
-        this.add(dButton);
         //progressbar
         timeBar = new JProgressBar(JProgressBar.HORIZONTAL,0,10000);
         timeBar.setForeground(Color.GREEN);
         timeBar.setValue(timeBar.getMaximum());
         timeBar.setBounds(25,480,450,10);
+        timeBar.setVisible(false);
         this.add(timeBar);
+        //resultLabel
+        resultLabel = new JLabel("You got " + points + " points!");
+        resultLabel.setFont(font);
+        metrics = getFontMetrics(resultLabel.getFont());
+        resultLabel.setBounds((SCREEN_SIZE.width-metrics.stringWidth(resultLabel.getText()))/2,SCREEN_SIZE.height/3,
+                metrics.stringWidth(resultLabel.getText()), metrics.getHeight());
+        resultLabel.setForeground(Color.WHITE);
+        this.add(resultLabel);
+        //againButton
+        againButton = new JButton("Try again");
+        againButton.setFocusable(false);
+        againButton.setSize(100,50);
+        againButton.setBounds((SCREEN_SIZE.width-againButton.getWidth())/2,3*SCREEN_SIZE.height/4,
+                againButton.getWidth(),againButton.getHeight());
+        againButton.addActionListener(e -> introView());
+        this.add(againButton);
     }
     private JButton getQuizButton(int x, int y){
         JButton button = new JButton();
         button.setFocusable(false);
         button.setSize(buttonDimension);
         button.setBounds(x,y,button.getWidth(), button.getHeight());
+        button.addActionListener(this);
+        button.setVisible(false); //by default
+        this.add(button);
         return button;
     }/*
     private ImageIcon getScaled(ImageIcon img){
         return new ImageIcon(img.getImage().getScaledInstance(20,20,Image.SCALE_SMOOTH));
     }*/
     private void startQuiz() {
+        //Intro components
+        introLabel.setVisible(false);
+        difficultyComboBox.setVisible(false);
+        startButton.setVisible(false);
+        //Game components
         numberLabel.setVisible(true);
         questionLabel.setVisible(true);
         aButton.setVisible(true);
@@ -212,23 +232,19 @@ public class QuizPanel extends JPanel implements ActionListener{
         } else {
             String correctAnswer =questions.get(order.get(currentQuestion)).get(6);
             //System.out.println(correctAnswer);
-            if(correctAnswer.equals("a"))
-                aButton.setBackground(Color.GREEN);
-            else if(correctAnswer.equals("b"))
-                bButton.setBackground(Color.GREEN);
-            else if(correctAnswer.equals("c"))
-                cButton.setBackground(Color.GREEN);
-            else
-                dButton.setBackground(Color.GREEN);
+            switch (correctAnswer) {
+                case "a" -> aButton.setBackground(Color.GREEN);
+                case "b" -> bButton.setBackground(Color.GREEN);
+                case "c" -> cButton.setBackground(Color.GREEN);
+                default -> dButton.setBackground(Color.GREEN);
+            }
             if(!answer.equals(correctAnswer)){
-                if(answer.equals("a"))
-                    aButton.setBackground(Color.RED);
-                else if(answer.equals("b"))
-                    bButton.setBackground(Color.RED);
-                else if(answer.equals("c"))
-                    cButton.setBackground(Color.RED);
-                else
-                    dButton.setBackground(Color.RED);
+                switch (answer) {
+                    case "a" -> aButton.setBackground(Color.RED);
+                    case "b" -> bButton.setBackground(Color.RED);
+                    case "c" -> cButton.setBackground(Color.RED);
+                    default -> dButton.setBackground(Color.RED);
+                }
             }
         }
         Timer pause = new Timer(1500, e -> {
@@ -246,6 +262,7 @@ public class QuizPanel extends JPanel implements ActionListener{
         pause.start();
     }
     void displayResults(){
+        //Game components
         numberLabel.setVisible(false);
         questionLabel.setVisible(false);
         aButton.setVisible(false);
@@ -253,26 +270,12 @@ public class QuizPanel extends JPanel implements ActionListener{
         cButton.setVisible(false);
         dButton.setVisible(false);
         timeBar.setVisible(false);
-        resultLabel = new JLabel("You got " + points + " points!");
-        Font font = new Font("Ink Free",Font.BOLD, 35);
-        resultLabel.setFont(font);
-        FontMetrics metrics = getFontMetrics(resultLabel.getFont());
-        resultLabel.setBounds((SCREEN_SIZE.width-metrics.stringWidth(resultLabel.getText()))/2,SCREEN_SIZE.height/3,
-                metrics.stringWidth(resultLabel.getText()), metrics.getHeight());
-        resultLabel.setForeground(Color.WHITE);
-        this.add(resultLabel);
-        againButton = new JButton("Try again");
-        againButton.setFocusable(false);
-        againButton.setSize(100,50);
-        againButton.setBounds((SCREEN_SIZE.width-againButton.getWidth())/2,3*SCREEN_SIZE.height/4,
-                againButton.getWidth(),againButton.getHeight());
-        againButton.addActionListener(e -> {
-            resultLabel.setVisible(false);
-            againButton.setVisible(false);
-            questions.clear();
-            order.clear();
-            introView();
-        });
-        this.add(againButton);
+        //Result components
+        resultLabel.setVisible(true);
+        againButton.setVisible(true);
+        resultLabel.setText("You got " + points + " points!");
+        //Clear arrays
+        questions.clear();
+        order.clear();
     }
 }

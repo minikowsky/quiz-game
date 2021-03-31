@@ -58,22 +58,19 @@ public class LogInPanel extends JPanel {
         loginButton.setFocusable(false);
         loginButton.setSize(75,20);
         loginButton.setBounds(375,300, loginButton.getWidth(), loginButton.getHeight());
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String login = loginField.getText();
-                String password = new String(passwordField.getPassword());
-                if(Driver.login(login,password)){
-                    int ID = Driver.getID(login,password);
-                    CurrentUser.setUser(ID,login,password);
-                    ((Window)getRootPane().getParent()).dispose();
-                    new MainFrame();
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"Incorrect login or password");
-                    loginField.setText("");
-                    passwordField.setText("");
-                }
+        loginButton.addActionListener(e -> {
+            String login = loginField.getText();
+            String password = new String(passwordField.getPassword());
+            if(Driver.login(login,password)){
+                int ID = Driver.getID(login,password);
+                CurrentUser.setUser(ID,login,password);
+                ((Window)getRootPane().getParent()).dispose();
+                new MainFrame();
+            }
+            else{
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"Incorrect login or password");
+                loginField.setText("");
+                passwordField.setText("");
             }
         });
         this.add(loginButton);

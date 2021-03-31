@@ -34,32 +34,30 @@ public class SettingsPanel extends BasePanel {
         saveButton = new JButton("Save");
         saveButton.setBounds(225,450,75,30);
         saveButton.setFocusable(false);
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO: choose language
-                //System.out.println(comboBox.getSelectedIndex());
-                //TODO: change password
-                //check if all fields are filled in
-                //check if old password is correct
-                //check if new password fields are the same
-                //then -> update password
-                String oldPassword = new String(oldPasswordField.getPassword());
-                String newPassword1 = new String(newPasswordField.getPassword());
-                String newPassword2 = new String(newPasswordFieldAgain.getPassword());
-                if(oldPassword.equals("") || newPassword1.equals("") || newPassword2.equals("")){
-                    JOptionPane.showMessageDialog(null,"Error!\n Fill in all fields!");
-                    return; }
-                if(!CurrentUser.getUserPassword().equals(oldPassword)){
-                    JOptionPane.showMessageDialog(null,"Error!\n Old password is incorrect!");
-                    return; }
-                if(!newPassword1.equals(newPassword2)){
-                    JOptionPane.showMessageDialog(null,"Error!\n New password fields are not the same!");
-                    return;
-                }
-                CurrentUser.setUserPassword(newPassword1);
-                CurrentUser.updateUser();
+        saveButton.addActionListener(e -> {
+            //TODO: choose language
+            //System.out.println(comboBox.getSelectedIndex());
+
+            String oldPassword = new String(oldPasswordField.getPassword());
+            String newPassword1 = new String(newPasswordField.getPassword());
+            String newPassword2 = new String(newPasswordFieldAgain.getPassword());
+            if(oldPassword.equals("") || newPassword1.equals("") || newPassword2.equals("")){
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"Error!\n Fill in all fields!");
+                return; }
+            if(!CurrentUser.getUserPassword().equals(oldPassword)){
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"Error!\n Old password is incorrect!");
+                return; }
+            if(!newPassword1.equals(newPassword2)){
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"Error!\n New password fields are not the same!");
+                return;
             }
+            if(newPassword1.equals(oldPassword)){
+                JOptionPane.showMessageDialog(getRootPane().getParent(),"Error!\n New password has to be different!");
+                return;
+            }
+            CurrentUser.setUserPassword(newPassword1);
+            CurrentUser.updateUser();
+            JOptionPane.showMessageDialog(getRootPane().getParent(),"Success!\n Password has been changed!");
         });
         this.add(saveButton);
     }
