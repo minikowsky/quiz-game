@@ -31,8 +31,10 @@ public class QuizPanel extends JPanel implements ActionListener{
     ArrayList<ArrayList<String>> questions;
     JLabel introLabel;
     JButton startButton;
+    JComboBox difficultyComboBox;
     JLabel resultLabel;
     JButton againButton;
+    String gameDifficulty;
     public QuizPanel(){
         this.setPreferredSize(SCREEN_SIZE);
         this.setBackground(new Color(128, 128, 128));
@@ -44,7 +46,9 @@ public class QuizPanel extends JPanel implements ActionListener{
                 displayAnswer("");
             }
         });
-
+        introView();
+    }
+    private void introView(){
         introLabel = new JLabel("Press 'Start' to begin!");
         Font font = new Font("Ink Free",Font.BOLD, 35);
         introLabel.setFont(font);
@@ -53,6 +57,15 @@ public class QuizPanel extends JPanel implements ActionListener{
                 metrics.stringWidth(introLabel.getText()), metrics.getHeight());
         introLabel.setForeground(Color.WHITE);
         this.add(introLabel);
+        String[] difficulties = {"Easy","Medium","Hard"};
+        difficultyComboBox = new JComboBox(difficulties);
+        difficultyComboBox.setSelectedIndex(0);
+        gameDifficulty = gameDifficulty = (String)difficultyComboBox.getSelectedItem();
+        difficultyComboBox.addActionListener(e -> {gameDifficulty = (String)difficultyComboBox.getSelectedItem();});
+        difficultyComboBox.setSize(75,25);
+        difficultyComboBox.setBounds((SCREEN_SIZE.width-difficultyComboBox.getWidth())/2,3*SCREEN_SIZE.height/5,
+                difficultyComboBox.getWidth(),difficultyComboBox.getHeight());
+        this.add(difficultyComboBox);
         startButton = new JButton("Start");
         startButton.setFocusable(false);
         startButton.setSize(100,50);
@@ -61,6 +74,7 @@ public class QuizPanel extends JPanel implements ActionListener{
         startButton.addActionListener(e -> {
             resultLabel = null;
             introLabel.setVisible(false);
+            difficultyComboBox.setVisible(false);
             startButton.setVisible(false);
             initComponents();
             startQuiz();
@@ -111,13 +125,20 @@ public class QuizPanel extends JPanel implements ActionListener{
         return new ImageIcon(img.getImage().getScaledInstance(20,20,Image.SCALE_SMOOTH));
     }*/
     private void startQuiz() {
+        numberLabel.setVisible(true);
+        questionLabel.setVisible(true);
+        aButton.setVisible(true);
+        bButton.setVisible(true);
+        cButton.setVisible(true);
+        dButton.setVisible(true);
+        timeBar.setVisible(true);
         points=0;
         currentQuestion = -1;
         getRandomQuestions();
         nextQuestion();
     }
     private void getRandomQuestions(){
-        questions = Driver.getQuestions("Easy");
+        questions = Driver.getQuestions(gameDifficulty);
 
         for(int i = 0; i < questions.size(); i++){
             order.add(i);
@@ -248,16 +269,9 @@ public class QuizPanel extends JPanel implements ActionListener{
         againButton.addActionListener(e -> {
             resultLabel.setVisible(false);
             againButton.setVisible(false);
-            numberLabel.setVisible(true);
-            questionLabel.setVisible(true);
-            aButton.setVisible(true);
-            bButton.setVisible(true);
-            cButton.setVisible(true);
-            dButton.setVisible(true);
-            timeBar.setVisible(true);
             questions.clear();
             order.clear();
-            startQuiz();
+            introView();
         });
         this.add(againButton);
     }
