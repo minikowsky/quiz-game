@@ -13,5 +13,5 @@ public class CurrentUser {
         userPassword = password;
     }
     public static void setUserPassword(String password){ userPassword = password; }
-    public static void updateUser(){ Driver.updateUser(userID,userPassword); }
+    public static void update(){ Driver.updateUser(userID,userPassword); }
 }

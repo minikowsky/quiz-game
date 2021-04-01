@@ -29,6 +29,7 @@ public class Driver {
             e.printStackTrace();
         }
     }
+
     public static boolean login(String userLogin,String userPassword){
         //String query = "SELECT * FROM users WHERE userLogin="\""+userLogin+"\" AND userPassword=\""+userPassword+"\"";
         boolean result = false;
@@ -48,7 +49,7 @@ public class Driver {
     public static boolean register(String userLogin, String userPassword){
         int result = 0;
         try {
-            String sql = "INSERT users VALUE (0,?,?);";
+            String sql = "INSERT users (userID,userLogin,userPassword) VALUE (0,?,?);";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,userLogin);
             preparedStatement.setString(2,userPassword);
@@ -62,7 +63,7 @@ public class Driver {
                 System.out.println(s);
             }*/
         } catch (SQLException exception){
-            //exception.printStackTrace();
+            exception.printStackTrace();
             System.out.println("Error");
             return false;
         }
@@ -72,21 +73,27 @@ public class Driver {
     public static boolean isLoginTaken(String userLogin) {
         boolean result = false;
         try {
-            String sql = "SELECT * FROM users WHERE userLogin=?;";
+            String sql = "SELECT COUNT(*) FROM users WHERE userLogin=?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,userLogin);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) result = true;
+            if(resultSet.next()) {
+                System.out.println(resultSet.getInt(1));
+                if(resultSet.getInt(1)>0){
+                    result = true;
+                }
+            }
         } catch (SQLException exception){
             exception.printStackTrace();
         }
+        System.out.println(result);
         return result;
     }
 
     public static int getID(String userLogin, String userPassword){
         int id = 0;
         try {
-            String sql = "SELECT userID FROM users WHERE userLogin=? AND userPassword=?;;";
+            String sql = "SELECT userID FROM users WHERE userLogin=? AND userPassword=?;";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,userLogin);
             preparedStatement.setString(2,userPassword);
@@ -142,5 +149,54 @@ public class Driver {
             System.out.println(r);
         }
         return questions;
+    }
+
+    public static int addResult(int userID, int points) {
+        int result = 0;
+        try {
+            String sql = "INSERT results (resultID,userID,points) VALUE (0,?,?);";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,userID);
+            preparedStatement.setInt(2,points);
+            result = preparedStatement.executeUpdate();
+        } catch (SQLException exception){
+            exception.printStackTrace();
+            System.out.println("Error");
+            return 0;
+        }
+        return result;
+    }
+    public static String getUserLogin(int id){
+        String login = "";
+        try {
+            String sql = "SELECT userLogin FROM users WHERE userID=?;";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                login = resultSet.getString(1);
+            }
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return login;
+    }
+    public static ArrayList<String> getUserList(){
+        ArrayList<String> userList = new ArrayList<>();
+        try {
+            String sql = "SELECT resultID,userID,MAX(points) FROM results GROUP BY userID ORDER BY points desc;";
+            ResultSet rs = statement.executeQuery(sql);
+            int i = 1;
+            while (rs.next()) {
+                String userLogin = getUserLogin(rs.getInt(2));
+                String s = i + ". "+userLogin
+                        + ": " + rs.getString(3) + "\n";
+                userList.add(s);
+                i++;
+            }
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return userList;
     }
 }

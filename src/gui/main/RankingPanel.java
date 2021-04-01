@@ -1,8 +1,11 @@
 package gui.main;
 
+import database.Driver;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class RankingPanel extends BasePanel {
     JScrollPane scrollPane;
@@ -11,24 +14,15 @@ public class RankingPanel extends BasePanel {
     public RankingPanel(String panelName){
         super(panelName);
         initComponents();
-        getRanking();
+        refresh();
     }
+    public void refresh() {
+        rankingArea.setText("");
+        ArrayList<String> usersList = Driver.getUserList();
+        for(String s: usersList){
+            rankingArea.append(s);
+        }
 
-    private void getRanking() {
-        rankingArea.append("1.Admin\t100 points\n");
-        rankingArea.append("2.Kuba\t 90 points\n");
-        rankingArea.append("3.Paulina\t 80 points\n");
-        rankingArea.append("4.John\t 70 points\n");
-        rankingArea.append("5.Tomasz\t 40 points\n");
-        rankingArea.append("6.Maciek\t 10 points\n");
-        rankingArea.append("7.Admin\t100 points\n");
-        rankingArea.append("8.Kuba\t 90 points\n");
-        rankingArea.append("9.Paulina\t 80 points\n");
-        rankingArea.append("10.John\t 70 points\n");
-        rankingArea.append("11.Tomasz\t 40 points\n");
-        rankingArea.append("12.Maciek\t 10 points\n");
-        rankingArea.append("13.Admin\t100 points\n");
-        rankingArea.append("14.Kuba\t 90 points");
     }
 
     private void initComponents() {

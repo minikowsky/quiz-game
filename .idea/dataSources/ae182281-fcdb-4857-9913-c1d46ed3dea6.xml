@@ -990,12 +990,12 @@ SELECT|sys.sys_config
       <DataType>tinyint unsigned|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="302" parent="288" name="total_points">
+    <column id="302" parent="288" name="points">
       <Position>3</Position>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="303" parent="288" name="gameDifficulty">
+    <column id="303" parent="288" name="difficulty">
       <Position>4</Position>
       <DataType>enum(&apos;Easy&apos;, &apos;Medium&apos;, &apos;Hard&apos;)|0e</DataType>
       <NotNull>1</NotNull>

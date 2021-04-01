@@ -1,5 +1,6 @@
 package gui.main;
 
+import database.CurrentUser;
 import database.Driver;
 
 import javax.swing.*;
@@ -72,7 +73,10 @@ public class QuizPanel extends JPanel implements ActionListener{
         difficultyComboBox.setSelectedIndex(0);
         gameDifficulty =  (String)difficultyComboBox.getSelectedItem();
         difficultyComboBox.addActionListener(e -> gameDifficulty = (String)difficultyComboBox.getSelectedItem());
-        difficultyComboBox.setSize(75,25);
+        difficultyComboBox.setSize(100,25);
+        DefaultListCellRenderer dlcr = new DefaultListCellRenderer();
+        dlcr.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+        difficultyComboBox.setRenderer(dlcr);
         difficultyComboBox.setBounds((SCREEN_SIZE.width-difficultyComboBox.getWidth())/2,3*SCREEN_SIZE.height/5,
                 difficultyComboBox.getWidth(),difficultyComboBox.getHeight());
         this.add(difficultyComboBox);
@@ -95,7 +99,7 @@ public class QuizPanel extends JPanel implements ActionListener{
         questionLabel.setFont(questionFont);
         questionLabel.setForeground(Color.WHITE);
         questionLabel.setVisible(false);
-        questionLabel.setBounds(50,100,400, 150);
+        questionLabel.setBounds(50,75,400, 200);
         this.add(questionLabel);
         //buttons
         aButton = getQuizButton(25,275);
@@ -274,6 +278,7 @@ public class QuizPanel extends JPanel implements ActionListener{
         resultLabel.setVisible(true);
         againButton.setVisible(true);
         resultLabel.setText("You got " + points + " points!");
+        Driver.addResult(CurrentUser.getUserID(),points);
         //Clear arrays
         questions.clear();
         order.clear();

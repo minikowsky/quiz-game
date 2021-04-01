@@ -83,7 +83,7 @@ public class SignUpPanel extends JPanel {
                         if(Driver.register(login,pass1)){
                             JOptionPane.showMessageDialog(getRootPane().getParent(),"You have been signed in!\n\tNow log in");
                         } else{
-                            JOptionPane.showMessageDialog(getRootPane().getParent(),"Login is already taken :( ");
+                            JOptionPane.showMessageDialog(getRootPane().getParent(),"register error :( ");
                         }
                     } else{
                         JOptionPane.showMessageDialog(getRootPane().getParent(),"These two passwords are different");

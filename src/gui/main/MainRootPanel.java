@@ -46,6 +46,7 @@ public class MainRootPanel extends JPanel {
         rankingButton.addActionListener(e -> {
             CardLayout cl = (CardLayout)(cardPanel.getLayout());
             cl.show(cardPanel,"ranking");
+            rankingPanel.refresh();
         });
         menuPanel.add(rankingButton);
         //Tutorial

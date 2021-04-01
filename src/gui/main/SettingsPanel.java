@@ -51,7 +51,7 @@ public class SettingsPanel extends BasePanel {
                 return;
             }
             CurrentUser.setUserPassword(newPassword1);
-            CurrentUser.updateUser();
+            CurrentUser.update();
             JOptionPane.showMessageDialog(getRootPane().getParent(),"Success!\n Password has been changed!");
         });
         this.add(saveButton);
