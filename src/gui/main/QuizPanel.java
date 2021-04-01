@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import java.util.Random;
 
 public class QuizPanel extends JPanel implements ActionListener{
     final Dimension SCREEN_SIZE = new Dimension(500, 500);
@@ -91,11 +90,12 @@ public class QuizPanel extends JPanel implements ActionListener{
         numberLabel.setForeground(Color.WHITE);
         this.add(numberLabel);
         //question
-        font = new Font("Ink Free",Font.BOLD, 20);
+        Font questionFont = new Font("Monospaced",Font.BOLD, 22);
         questionLabel = new JLabel();
-        questionLabel.setFont(font);
+        questionLabel.setFont(questionFont);
         questionLabel.setForeground(Color.WHITE);
         questionLabel.setVisible(false);
+        questionLabel.setBounds(50,100,400, 150);
         this.add(questionLabel);
         //buttons
         aButton = getQuizButton(25,275);
@@ -114,7 +114,7 @@ public class QuizPanel extends JPanel implements ActionListener{
         resultLabel.setFont(font);
         metrics = getFontMetrics(resultLabel.getFont());
         resultLabel.setBounds((SCREEN_SIZE.width-metrics.stringWidth(resultLabel.getText()))/2,SCREEN_SIZE.height/3,
-                metrics.stringWidth(resultLabel.getText()), metrics.getHeight());
+                300, 100);
         resultLabel.setForeground(Color.WHITE);
         this.add(resultLabel);
         //againButton
@@ -159,7 +159,7 @@ public class QuizPanel extends JPanel implements ActionListener{
     }
     private void getRandomQuestions(){
         questions = Driver.getQuestions(gameDifficulty);
-
+        System.out.println();
         for(int i = 0; i < questions.size(); i++){
             order.add(i);
         }
@@ -174,9 +174,9 @@ public class QuizPanel extends JPanel implements ActionListener{
             numberLabel.setText("#"+(currentQuestion+1));
             FontMetrics metrics = getFontMetrics(numberLabel.getFont());
             numberLabel.setBounds(25,25,metrics.stringWidth(numberLabel.getText()), metrics.getHeight());
-            questionLabel.setText(questions.get(order.get(currentQuestion)).get(1));
-            metrics = getFontMetrics(numberLabel.getFont());
-            questionLabel.setBounds(50,150,metrics.stringWidth(questionLabel.getText()), metrics.getHeight());
+            String questionText = String.format("<html><div style=\"width:%dpx;\">%s</div></html>", 300,
+                    questions.get(order.get(currentQuestion)).get(1));
+            questionLabel.setText(questionText);
             //System.out.println(questionLabel.getText());
             aButton.setText(questions.get(order.get(currentQuestion)).get(2));
             bButton.setText(questions.get(order.get(currentQuestion)).get(3));

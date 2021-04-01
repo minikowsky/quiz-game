@@ -1,5 +1,7 @@
 package database;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
 
@@ -119,14 +121,18 @@ public class Driver {
             preparedStatement.setString(1,gameDifficulty);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                ArrayList<String> questionSet = new ArrayList<String>();
+                ArrayList<String> questionSet = new ArrayList<>();
                 for(int i = 1; i <= 8; i++){
-                    questionSet.add(resultSet.getString(i));
+                    byte[] b = resultSet.getString(i).getBytes();
+                    String s = new String(b, "UTF-8");
+                    questionSet.add(s);
                 }
                 questions.add(questionSet);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         for(ArrayList<String> s: questions){
             String r="";

@@ -4,8 +4,6 @@ import database.CurrentUser;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class SettingsPanel extends BasePanel {
     JComboBox comboBox;
@@ -26,11 +24,8 @@ public class SettingsPanel extends BasePanel {
         this.add(comboBox);
 
         oldPasswordField = getJPasswordField(250);
-        this.add(oldPasswordField);
         newPasswordField = getJPasswordField(285);
-        this.add(newPasswordField);
         newPasswordFieldAgain = getJPasswordField(320);
-        this.add(newPasswordFieldAgain);
         saveButton = new JButton("Save");
         saveButton.setBounds(225,450,75,30);
         saveButton.setFocusable(false);
@@ -64,6 +59,7 @@ public class SettingsPanel extends BasePanel {
     private JPasswordField getJPasswordField(int y){
         JPasswordField password = new JPasswordField();
         password.setBounds(250,y,180,25);
+        this.add(password);
         return password;
     }
     @Override
